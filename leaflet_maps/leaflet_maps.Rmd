@@ -24,6 +24,11 @@ Essentially, this package lets you make maps with custom map tiles, markers, pol
 # Uncomment and run "install.packages" functions below if you have not yet installed these packages
 
 #install.packages("leaflet")
+
+# IF YOU GET AN ERROR BECAUSE THERE IS NO PACKAGE CALLED httpuv
+
+#install.packages("httpuv")
+#install.packages("leaflet")
 library(leaflet)
 
 #install.packages("dplyr")

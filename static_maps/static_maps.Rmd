@@ -1,11 +1,11 @@
 ---
 title: "Static maps"
 author: "Andrew Ba Tran"
-description: "https://learn.r-journalism.com/en/mapping/"
 output:
   html_document:
-    toc: true
-    toc_float: true
+    toc: yes
+    toc_float: yes
+description: https://learn.r-journalism.com/en/mapping/
 ---
 
 This is from the [fifth chapter](https://learn.r-journalism.com/en/mapping/static_maps/static-maps/) of [learn.r-journalism.com](https://learn.r-journalism.com/).
@@ -227,7 +227,8 @@ options(tigris_class = "sf")
 
 tx <- counties("TX", cb=T)
 
-#If cb is set to TRUE, download a generalized (1:500k) counties file. Defaults to FALSE (the most detailed TIGER file).
+# If cb is set to TRUE, download a generalized (1:500k) counties file. 
+# Defaults to FALSE (the most detailed TIGER file).
 
 # Excluding Non-Continguous states (sorry!)
 
@@ -362,7 +363,8 @@ census_api_key(census_key)
 jobs <- c(labor_force = "B23025_005E", 
               unemployed = "B23025_002E")
 
-jersey <- get_acs(geography="tract", year=2016, variables= jobs, county = "Hudson", state="NJ", geometry=T)
+jersey <- get_acs(geography="tract", year=2016, variables= jobs, county = "Hudson", 
+                  state="NJ", geometry=T)
 
 head(jersey)
 ```

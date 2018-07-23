@@ -1,11 +1,11 @@
 ---
 title: "Traffic stops case study"
 author: "Andrew Ba Tran"
-description: "https://learn.r-journalism.com/en/mapping/"
 output:
   html_document:
-    toc: true
-    toc_float: true
+    toc: yes
+    toc_float: yes
+description: https://learn.r-journalism.com/en/mapping/
 ---
 
 This is from the [fifth chapter](https://learn.r-journalism.com/en/mapping/case_study/traffic-stops/) of [learn.r-journalism.com](https://learn.r-journalism.com/).
@@ -79,13 +79,16 @@ options(tigris_class = "sf")
 
 new_haven <- tracts(state="CT", county="New Haven", cb=T)
 
-#If cb is set to TRUE, download a generalized (1:500k) counties file. Defaults to FALSE (the most detailed TIGER file).
+# If cb is set to TRUE, download a generalized (1:500k) counties file. Defaults to FALSE
+# (the most detailed TIGER file).
 ```
 
 ```{r map1, fig.width=9, fig.height=5}
 ggplot(new_haven) + 
   geom_sf() +
-  geom_point(data=stops, aes(x=InterventionLocationLongitude, y=InterventionLocationLatitude), color="red") +
+  geom_point(data=stops, 
+             aes(x=InterventionLocationLongitude, 
+                 y=InterventionLocationLatitude), color="red") +
   #geom_point(data=stops_spatial, aes(x=lon, y=lat), color="blue") +
   theme_void() +
   theme(panel.grid.major = element_line(colour = 'transparent')) +
@@ -109,14 +112,15 @@ One way is to visualize the distribution of stops.
 We’ll use the `stat_density2d()` function within ggplot2 and use `coord_map()` and `xlim` and `ylim` to set the boundaries on the map so it’s zoomed in more.
 
 
-{{% notice tip %}}
-When you're stacking ggplots or dplyr commands, the line can't end with a + or a %>% normally, right? Well, if you stick a NULL at the last line, you can have the + or %>% precede it. This is kind of an advanced tip for folks who play around with scripts and are tired of commenting out before the + or %>%.
-{{% /notice %}}
+**TIP: **When you're stacking ggplots or dplyr commands, the line can't end with a + or a %>% normally, right? Well, if you stick a NULL at the last line, you can have the + or %>% precede it. This is kind of an advanced tip for folks who play around with scripts and are tired of commenting out before the + or %>%.
+
 
 ```{r heatmap1}
 ggplot() +
   geom_sf(data=new_haven, color = "black", fill=NA, size=0.5) +
-  stat_density2d(data=stops, show.legend=F, aes(x=InterventionLocationLongitude, y=InterventionLocationLatitude, fill=..level.., alpha=..level..), geom="polygon", size=4, bins=10) +
+  stat_density2d(data=stops, show.legend=F, 
+          aes(x=InterventionLocationLongitude, y=InterventionLocationLatitude, 
+          fill=..level.., alpha=..level..), geom="polygon", size=4, bins=10) +
   scale_fill_gradient(low="deepskyblue2", high="firebrick1", name="Distribution") +
   coord_sf(xlim=c(-73.067649, -72.743739), ylim=c(41.280972, 41.485011)) +
   labs(x=NULL, y=NULL, 
@@ -147,7 +151,9 @@ stops <- stops %>%
 
 ggplot() +
   geom_sf(data=new_haven, color = "black", fill=NA, size=0.5) +
-  stat_density2d(data=stops, show.legend=F, aes(x=InterventionLocationLongitude, y=InterventionLocationLatitude, fill=..level.., alpha=..level..), geom="polygon", size=4, bins=10) +
+  stat_density2d(data=stops, show.legend=F, 
+         aes(x=InterventionLocationLongitude, y=InterventionLocationLatitude, 
+         fill=..level.., alpha=..level..), geom="polygon", size=4, bins=10) +
   scale_fill_gradient(low="deepskyblue2", high="firebrick1", name="Distribution") +
   coord_sf(xlim=c(-73.067649, -72.743739), ylim=c(41.280972, 41.485011)) +
   #This is the new line being added
@@ -192,7 +198,8 @@ First, let's make sure it will match the correct coordinate reference system (CR
 
 ```{r set_crs, warning=F, message=F}
 stops_spatial <- stops %>% 
-  st_as_sf(coords=c("InterventionLocationLongitude", "InterventionLocationLatitude"), crs = "+proj=longlat") %>% 
+  st_as_sf(coords=c("InterventionLocationLongitude", "InterventionLocationLatitude"), 
+           crs = "+proj=longlat") %>% 
   st_transform(crs=st_crs(new_haven))
 ```
 
@@ -226,7 +233,7 @@ head(by_tract)
 We have enough here to visualize it.
 
 ```{r viz_aggregate, warning=F, message=F, fig.width=9, fig.height=5}
-# If you don't have viridis installed yet, uncomment and runt he line below
+# If you don't have viridis installed yet, uncomment and run the line below
 #install.packages("viridis")
 
 library(viridis)
@@ -383,10 +390,12 @@ hamden_pop_perc <- hamden_pop %>%
   mutate(variable=case_when(
     variable=="B02001_001" ~ "Total",
     variable=="B02001_002" ~ "White")) %>% 
-  # dropping Margin of Error-- I know this is not ideal but for this purpose, we'll get rid of it for now
+  # dropping Margin of Error-- I know this is not ideal but for this purpose, 
+  # we'll get rid of it for now
   select(-moe) %>% 
   spread(variable, estimate) %>% 
-  mutate(white_residents=round(White/Total*100,2), minority_residents=100-white_residents)
+  mutate(white_residents=round(White/Total*100,2), 
+         minority_residents=100-white_residents)
 
 head(hamden_pop_perc)
 ```
@@ -415,7 +424,8 @@ Great. Let's do some math real quick and visualize what we have with a diverging
 
 library(scales)
 
-stops_population$gap <- (stops_population$minority_stopped - stops_population$minority_residents)/100
+stops_population$gap <- (stops_population$minority_stopped - 
+                           stops_population$minority_residents)/100
 
 ggplot() +
   geom_sf(data=stops_population, aes(fill = gap), color="white", size=.25) +
@@ -424,7 +434,8 @@ ggplot() +
   labs(title = "Hamden: Minority traffic stops versus population",
        subtitle = "In 2013 and 2014",
        caption = "Source: data.ct.gov") +
-  scale_fill_distiller(type="seq", trans="reverse", palette = "PuOr", label=percent, breaks=pretty_breaks(n=10), name="Gap") +
+  scale_fill_distiller(type="seq", trans="reverse", palette = "PuOr", 
+                       label=percent, breaks=pretty_breaks(n=10), name="Gap") +
   #continuous_scale(limits=c(-30, 30)) +
   theme_void() +
   theme(panel.grid.major = element_line(colour = 'transparent')) +
@@ -443,7 +454,8 @@ We’ll use the annotate() function with a combination of segments, points, and 
 ```{r annotations, warning=F, message=F, fig.width=9, fig.height=5}
 
 
-stops_population$gap <- (stops_population$minority_stopped - stops_population$minority_residents)/100
+stops_population$gap <- (stops_population$minority_stopped - 
+                           stops_population$minority_residents)/100
 
 ggplot() +
   geom_sf(data=stops_population, aes(fill = gap), color="white", size=.25) +
@@ -452,20 +464,24 @@ ggplot() +
   labs(title = "Hamden: Minority traffic stops versus population",
        subtitle = "In 2013 and 2014",
        caption = "Source: data.ct.gov") +
-  scale_fill_distiller(type="seq", trans="reverse", palette = "PuOr", label=percent, breaks=pretty_breaks(n=10), name="Gap") +
+  scale_fill_distiller(type="seq", trans="reverse", palette = "PuOr", label=percent,
+                       breaks=pretty_breaks(n=10), name="Gap") +
   #continuous_scale(limits=c(-30, 30)) +
   theme_void() +
   theme(panel.grid.major = element_line(colour = 'transparent')) +
   # NEW CODE HERE
-  annotate("segment", x = -72.93, xend = -72.87, y = 41.325, yend = 41.325, colour = "lightblue", size=.5) +
+  annotate("segment", x = -72.93, xend = -72.87, y = 41.325, yend = 41.325, 
+           colour = "lightblue", size=.5) +
   annotate("point", x = -72.93, y = 41.325, colour = "lightblue", size = 2) +
-  annotate("text", x = -72.85, y = 41.325, label = "New Haven", size=5, colour="gray30") +
-  annotate("segment", x = -72.89, xend = -72.86, y = 41.375, yend = 41.375, colour = "lightblue", size=.5) +
+  annotate("text", x = -72.85, y = 41.325, label = "New Haven", size=5, 
+           colour="gray30") +
+  annotate("segment", x = -72.89, xend = -72.86, y = 41.375, yend = 41.375, 
+           colour = "lightblue", size=.5) +
   annotate("point", x = -72.89, y = 41.375, colour = "lightblue", size = 2) +
-  annotate("text", x = -72.845, y = 41.375, label = "Hamden", size=5, colour="gray30") +
+  annotate("text", x = -72.845, y = 41.375, label = "Hamden", size=5, 
+           colour="gray30") +
   annotate("point", x = -72.83, y = 41.375, colour="white", size=.2) +
-
-NULL
+  NULL
   
 ```
 

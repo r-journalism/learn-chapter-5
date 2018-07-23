@@ -1,11 +1,11 @@
 ---
 title: "Geolocating data"
 author: "Andrew Ba Tran"
-description: "https://learn.r-journalism.com/en/mapping/"
 output:
   html_document:
-    toc: true
-    toc_float: true
+    toc: yes
+    toc_float: yes
+description: https://learn.r-journalism.com/en/mapping/
 ---
 
 This is from the [fifth chapter](http://learn.r-journalism.com/en/mapping/geolocating/geolocating/) of [learn.r-journalism.com](https://learn.r-journalism.com/).
@@ -109,7 +109,8 @@ options(tigris_class = "sf")
 
 ct <- county_subdivisions("CT", cb=T)
 
-#If cb is set to TRUE, download a generalized (1:500k) counties file. Defaults to FALSE (the most detailed TIGER file).
+# If cb is set to TRUE, download a generalized (1:500k) counties file. 
+# Defaults to FALSE (the most detailed TIGER file).
 
 ggplot(ct) + 
   geom_sf() +
@@ -143,7 +144,8 @@ stations$staff <- sample(200, size=nrow(stations), replace=T)
 
 ggplot(ct) + 
   geom_sf(fill="transparent") +
-  geom_point(data=stations, aes(x=lon, y=lat, size=staff, color=DESCRIPTION),  fill="white", shape=1) +
+  geom_point(data=stations, aes(x=lon, y=lat, size=staff, color=DESCRIPTION),  
+             fill="white", shape=1) +
   theme_void() +
   theme(panel.grid.major = element_line(colour = 'transparent')) +
   labs(title="Police stations in Connecticut") +

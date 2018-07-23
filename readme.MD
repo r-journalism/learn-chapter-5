@@ -55,3 +55,9 @@ To view the local html version of the .rmd files, you can try the following comm
 * `browseURL("leaflet_maps/leaflet_maps.html")`
 * `browseURL("census_maps/census_maps.html")`
 ----
+
+
+## License
+
+The online version of this course is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/).
+

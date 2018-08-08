@@ -1,25 +1,15 @@
 ---
 title: "Interactive choropleth maps"
 author: "Andrew Ba Tran"
-description: "https://learn.r-journalism.com/en/mapping/"
 output:
   html_document:
-    toc: true
-    toc_float: true
+    toc: yes
+    toc_float: yes
+description: https://learn.r-journalism.com/en/mapping/
 ---
 
 This is from the [fifth chapter](http://learn.r-journalism.com/en/mapping/census_maps/census-maps/) of [learn.r-journalism.com](https://learn.r-journalism.com/).
 
----
-title: "Interactive choropleth maps"
-description: "With Starbucks and Census data"
-author: "Andrew Ba Tran"
-date: 2018-05-27T21:13:14-05:00
-categories: ["R"]
-tags: ["R", "mapping", "census"]
-weight: 5
-slug: census-maps
----
 
 Sometimes there are just too many dots on a map. If the point of your map is to know the location of every single data point [because of its significance](https://www.washingtonpost.com/graphics/2018/national/migrant-child-shelters/), then fine. Dots can also demonstrate the distribution of data geographically [very effectively](https://www.washingtonpost.com/graphics/2018/national/segregation-us-cities/).
 
@@ -59,14 +49,13 @@ We can use **dplyr** `>%>` pipes because the **leaflet** package developers inco
     * Passing the argument `popup` to the function with the variable *NAME* from the shapefile
     
   
-```{r viz_states, fig.width=8, fig.height=4, eval=F}
+```{r viz_states, fig.width=8, fig.height=4}
 states %>% 
   leaflet() %>% 
   addTiles() %>% 
   addPolygons(popup=~NAME)
 ```
 
-<iframe src="//learn.r-journalism.com/iframes/choro1.html" frameborder=0,  height=400, width="100%", scrolling="no"></iframe>
 
 This is how it looks raw. The Census shape files also include territories, like Guam and Puerto Rico.
 
@@ -110,7 +99,9 @@ states_merged_sb <- geo_join(states, sb_state, "STUSPS", "state")
 pal <- colorNumeric("Greens", domain=states_merged_sb$total)
 
 # Getting rid of rows with NA values
-# Using the Base R method of filtering subset() because we're dealing with a SpatialPolygonsDataFrame and not a normal data frame, thus filter() wouldn't work
+# Using the Base R method of filtering subset() because 
+# we're dealing with a SpatialPolygonsDataFrame and 
+# not a normal data frame, thus filter() wouldn't work
 
 states_merged_sb <- subset(states_merged_sb, !is.na(total))
 
@@ -133,7 +124,7 @@ We're adding a few more **leaflet** functions.
     * `smoothFactor()`
 * `addLegend()` - same as in the previous section but with more customization
 
-```{r starbucks_map, warning=F, message=F, eval=F}
+```{r starbucks_map, warning=F, message=F}
 # Mapping it with the new tiles CartoDB.Positron
 leaflet() %>%
   addProviderTiles("CartoDB.Positron") %>%
@@ -151,7 +142,6 @@ leaflet() %>%
 
 ```
 
-<iframe src="//learn.r-journalism.com/iframes/choro2.html" frameborder=0,  height=400, width="100%", scrolling="no"></iframe>
 
 Hmm... Not that interesting, right?
 
@@ -276,7 +266,7 @@ head(popup_sb)
 
 And now the map.
 
-```{r finalmap1, fig.width=8, fig.height=4, warning=F, message=F, eval=F}
+```{r finalmap1, fig.width=8, fig.height=4, warning=F, message=F}
 leaflet() %>%
   addProviderTiles(providers$CartoDB.Positron) %>%
   setView(-98.483330, 38.712046, zoom = 4) %>% 
@@ -291,8 +281,6 @@ leaflet() %>%
             position = "bottomright", 
             title = "Starbucks<br />per 100,000<br/>residents")
 ```
-
-<iframe src="//learn.r-journalism.com/iframes/choro3.html" frameborder=0,  height=400, width="100%", scrolling="no"></iframe>
 
 
 Pretty nice. An easy way to display data one way and offer more data after a click.
@@ -309,7 +297,7 @@ We use the `highlight()` and `labelOptions()` as sub functions to `addPolygons()
 
 The downside is that it hover pop ups don't display HTML, so it limits the strings passed to it.
 
-```{r hover_map, eval=F}
+```{r hover_map}
 
 popup_sb <- paste0("Per capita: ", as.character(states_merged_sb_pc$per_capita))
 
@@ -338,4 +326,4 @@ leaflet() %>%
             title = "Starbucks<br />per 100,000<br/>residents")
 ``` 
 
-<iframe src="//learn.r-journalism.com/iframes/choro4.html" frameborder=0,  height=400, width="100%", scrolling="no"></iframe>
+

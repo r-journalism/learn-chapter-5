@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<meta name="progressive" content="true" />
+<meta name="allow-skip" content="false" />
+
+<title>Chapter 5</title>
+
+
+<!-- highlightjs -->
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+</head>
+
+<body>
+
+
+
+<div class="pageContent band">
+<div class="bandContent page">
+
+<div class="topics">
+
+<div id="section-shape-files" class="section level2">
+<h2>Shape files</h2>
+<div id="section-load-this-shapefile" class="section level3">
+<h3>Load this shapefile</h3>
+<p>The libraries you need for working with maps are already loaded.</p>
+<pre><code>library(ggplot2)
+library(sf)</code></pre>
+<p>Let’s load in a shapefile we have on the computer locally.</p>
+<p>It’s in the folder <em>Boston_Neighborhoods</em> and the shapefile is also called <em>Boston_Neighborhoods</em>. Load it in.</p>
+<p>Call the object <em>boston</em>.</p>
+<pre><code>library(sf)
+library(ggplot2)
+library(dplyr)
+
+map_filepath &lt;- &quot;Boston_Neighborhoods/Boston_Neighborhoods.shp&quot;
+
+boston &lt;- st_read(map_filepath)</code></pre>
+</div>
+<div id="section-glimpse" class="section level3">
+<h3>Glimpse</h3>
+<p>Let’s take a look at the data behind the shapefile.</p>
+<div class="tutorial-exercise" data-label="glimpse" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>_____(boston)</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.timelimit":30,"exercise.checker":["function (label, user_code, check_code, envir_result, evaluate_result, ","    ...) ","{","    if (is_bad_code(user_code, check_code, envir_result)) {","        return(list(message = \"Code wasn't right!\", correct = FALSE, ","            location = \"append\"))","    }","    else {","        return(list(message = \"Great Job!\", correct = TRUE, location = \"append\"))","    }","}"]}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="glimpse-check" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>glimpse(boston)</code></pre>
+</div>
+</div>
+<div id="section-plot-the-shapefile" class="section level3">
+<h3>Plot the shapefile</h3>
+<div class="tutorial-exercise" data-label="plot" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>_____(_______) +
+  _________()</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.timelimit":30,"exercise.checker":["function (label, user_code, check_code, envir_result, evaluate_result, ","    ...) ","{","    if (is_bad_code(user_code, check_code, envir_result)) {","        return(list(message = \"Code wasn't right!\", correct = FALSE, ","            location = \"append\"))","    }","    else {","        return(list(message = \"Great Job!\", correct = TRUE, location = \"append\"))","    }","}"]}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="plot-check" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>ggplot(boston) +
+  geom_sf()</code></pre>
+</div>
+<div id="section-plot-hint">
+<p>The ggplot2 and sf function you need to map out a shapefile is geom_sf().</p>
+</div>
+<p>Good job. Not much to display, yet.</p>
+<p>So let’s bring in some data to join it with.</p>
+</div>
+<div id="section-load-data" class="section level3">
+<h3>Load data</h3>
+<p>The data is historical population and race data by neighborhood from the City of Boston.</p>
+<p>It’s loaded in your environment as <strong>boston_population</strong>.</p>
+<p>Take a glimpse.</p>
+<div class="tutorial-exercise" data-label="glimpse2" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>_____(boston_population))</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.timelimit":30,"exercise.checker":["function (label, user_code, check_code, envir_result, evaluate_result, ","    ...) ","{","    if (is_bad_code(user_code, check_code, envir_result)) {","        return(list(message = \"Code wasn't right!\", correct = FALSE, ","            location = \"append\"))","    }","    else {","        return(list(message = \"Great Job!\", correct = TRUE, location = \"append\"))","    }","}"]}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="glimpse2-check" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>glimpse(boston_population)</code></pre>
+</div>
+</div>
+<div id="section-join-the-shapefile-to-the-data" class="section level3">
+<h3>Join the shapefile to the data</h3>
+<p>Combine the shape file <strong>boston</strong> to the data frame <strong>boston_population</strong>.</p>
+<p>Use the function that joins from the left from <em>dplyr</em>.</p>
+<div class="tutorial-exercise" data-label="join" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>boston_pop_map &lt;- _____(______, _______, by=c(_______=_______))
+
+boston_pop_map</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":false,"error":false,"message":true,"exercise.df_print":"paged","exercise.timelimit":30,"exercise.checker":["function (label, user_code, check_code, envir_result, evaluate_result, ","    ...) ","{","    if (is_bad_code(user_code, check_code, envir_result)) {","        return(list(message = \"Code wasn't right!\", correct = FALSE, ","            location = \"append\"))","    }","    else {","        return(list(message = \"Great Job!\", correct = TRUE, location = \"append\"))","    }","}"]}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="join-check" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>boston_pop_map &lt;- left_join(boston_population, boston, by=c(&quot;Neighborhood&quot;=&quot;Name&quot;))
+
+boston_pop_map</code></pre>
+</div>
+<div id="section-join-hint">
+<p>The dplyr verb you need to use to join to the left is left_join() and don’t forget that variable names in by need to be in quotes.</p>
+</div>
+</div>
+<div id="section-plot-the-data-on-the-shapefile" class="section level3">
+<h3>Plot the data on the shapefile</h3>
+<p>Make a choropleth with colors based on <em>Population</em>.</p>
+<div class="tutorial-exercise" data-label="plot2" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>ggplot(boston_pop_map) +
+  geom_sf(aes(fill=________))</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":false,"error":false,"message":true,"exercise.df_print":"paged","exercise.timelimit":30,"exercise.checker":["function (label, user_code, check_code, envir_result, evaluate_result, ","    ...) ","{","    if (is_bad_code(user_code, check_code, envir_result)) {","        return(list(message = \"Code wasn't right!\", correct = FALSE, ","            location = \"append\"))","    }","    else {","        return(list(message = \"Great Job!\", correct = TRUE, location = \"append\"))","    }","}"]}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="plot2-check" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>ggplot(boston_pop_map) +
+  geom_sf(aes(fill=Population))</code></pre>
+</div>
+</div>
+<div id="section-style-it" class="section level3">
+<h3>Style it</h3>
+<p>First, let’s fix the legend so the gradient goes in the other direction.</p>
+<p>And also add a title “Boston neighborhood population” and source in the caption.</p>
+<div class="tutorial-exercise" data-label="plot3" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>ggplot(boston_pop_map) +
+  geom_sf(aes(fill=Population)) +
+  scale_fill__________(_________=1, _______=&quot;Population&quot;) +
+  _____(_________=________________, _______=&quot;Source: City of Boston&quot;)</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":false,"error":false,"message":true,"exercise.df_print":"paged","exercise.timelimit":30,"exercise.checker":["function (label, user_code, check_code, envir_result, evaluate_result, ","    ...) ","{","    if (is_bad_code(user_code, check_code, envir_result)) {","        return(list(message = \"Code wasn't right!\", correct = FALSE, ","            location = \"append\"))","    }","    else {","        return(list(message = \"Great Job!\", correct = TRUE, location = \"append\"))","    }","}"]}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="plot3-check" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>ggplot(boston_pop_map) +
+  geom_sf(aes(fill=Population))  +
+  scale_fill_distiller(direction=1, name=&quot;Population&quot;) +
+  labs(title=&quot;Boston neighborhood population&quot;, caption=&quot;Source: US Census&quot;)</code></pre>
+</div>
+<div id="section-plot3-hint">
+<p>scale_fill_distiller()</p>
+</div>
+<p>Also, let’s get rid of the axis marks and the background gray grid.</p>
+<div class="tutorial-exercise" data-label="plot3a" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>ggplot(boston_pop_map) +
+  geom_sf(aes(fill=Population)) +
+  scale_fill__________(_________=1, _______=&quot;Population&quot;) +
+  _____(_________=________________, _______=&quot;Source: City of Boston&quot;) +
+  theme________() +
+  theme(_________________ = element_line(colour = ____________)) +</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":false,"error":false,"message":true,"exercise.df_print":"paged","exercise.timelimit":30,"exercise.checker":["function (label, user_code, check_code, envir_result, evaluate_result, ","    ...) ","{","    if (is_bad_code(user_code, check_code, envir_result)) {","        return(list(message = \"Code wasn't right!\", correct = FALSE, ","            location = \"append\"))","    }","    else {","        return(list(message = \"Great Job!\", correct = TRUE, location = \"append\"))","    }","}"]}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="plot3a-check" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>ggplot(boston_pop_map) +
+  geom_sf(aes(fill=Population))  +
+  scale_fill_distiller(direction=1, name=&quot;Population&quot;) + 
+  labs(title=&quot;Boston neighborhood population&quot;, caption=&quot;Source: US Census&quot;) +
+  theme_void() +
+  theme(panel.grid.major = element_line(colour = &#39;transparent&#39;))</code></pre>
+</div>
+<div id="section-plot3a-hint">
+<p>These style tweaks are in <a href="http://learn.r-journalism.com/en/mapping/static_maps/static-maps/">Chapter 5</a>.</p>
+</div>
+</div>
+</div>
+<div id="section-small-multiples" class="section level2">
+<h2>Small multiples</h2>
+<div id="section-more-data" class="section level3">
+<h3>More data</h3>
+<p>Let’s map historical population and race data by neighborhood from the City of Boston.</p>
+<p>It’s loaded in your environment as <strong>race_ethnicity2010</strong>.</p>
+<p>Take a glimpse.</p>
+<div class="tutorial-exercise" data-label="glimpse4" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>_____(race_ethnicity2010)</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.timelimit":30,"exercise.checker":["function (label, user_code, check_code, envir_result, evaluate_result, ","    ...) ","{","    if (is_bad_code(user_code, check_code, envir_result)) {","        return(list(message = \"Code wasn't right!\", correct = FALSE, ","            location = \"append\"))","    }","    else {","        return(list(message = \"Great Job!\", correct = TRUE, location = \"append\"))","    }","}"]}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="glimpse4-check" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>glimpse(race_ethnicity2010)</code></pre>
+</div>
+</div>
+<div id="section-join-the-shapefile-to-the-data-1" class="section level3">
+<h3>Join the shapefile to the data</h3>
+<p>Combine the shape file <strong>boston</strong> to the data frame <strong>race_ethnicity2010</strong>.</p>
+<p>Use the function that joins from the left from <em>dplyr</em>.</p>
+<div class="tutorial-exercise" data-label="join2" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>boston_race_map &lt;- _____(race_ethnicity2010, _______, by=c(_______=_______))
+
+boston_race_map</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":false,"error":false,"message":true,"exercise.df_print":"paged","exercise.timelimit":30,"exercise.checker":["function (label, user_code, check_code, envir_result, evaluate_result, ","    ...) ","{","    if (is_bad_code(user_code, check_code, envir_result)) {","        return(list(message = \"Code wasn't right!\", correct = FALSE, ","            location = \"append\"))","    }","    else {","        return(list(message = \"Great Job!\", correct = TRUE, location = \"append\"))","    }","}"]}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="join2-check" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>boston_race_map &lt;- left_join(race_ethnicity2010, boston, by=c(&quot;Neighborhood&quot;=&quot;Name&quot;))
+
+boston_race_map</code></pre>
+</div>
+</div>
+<div id="section-plot-the-data-on-the-shapefile-1" class="section level3">
+<h3>Plot the data on the shapefile</h3>
+<p>Map the data, setting the color based on <em>Percent.of.Population</em>.</p>
+<p>Also, facet wrap out by <em>Race.and.or.Ethnicity</em> this time.</p>
+<p><strong>This will take a few moments to render</strong>.</p>
+<div class="tutorial-exercise" data-label="plot4" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>ggplot(boston_race_map) +
+  geom_sf(aes(fill=________)) +
+  __________(~___________, ncol=2)</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":false,"error":false,"message":true,"exercise.df_print":"paged","exercise.timelimit":30,"exercise.checker":["function (label, user_code, check_code, envir_result, evaluate_result, ","    ...) ","{","    if (is_bad_code(user_code, check_code, envir_result)) {","        return(list(message = \"Code wasn't right!\", correct = FALSE, ","            location = \"append\"))","    }","    else {","        return(list(message = \"Great Job!\", correct = TRUE, location = \"append\"))","    }","}"]}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="plot4-check" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>ggplot(boston_race_map) +
+  geom_sf(aes(fill=Percent.of.Population)) +
+  facet_wrap(~Race.and.or.Ethnicity, ncol=2)</code></pre>
+</div>
+</div>
+<div id="section-style-with-title-and-color-fix" class="section level3">
+<h3>Style with title and color fix</h3>
+<p>First, let’s fix the legend so the gradient goes in the other direction.</p>
+<p>And also add a title “Boston neighborhood population by race” and source in the caption.</p>
+<p><strong>This will take a few moments to render</strong>.</p>
+<div class="tutorial-exercise" data-label="plot5" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>ggplot(boston_race_map) +
+  geom_sf(aes(fill=Percent.of.Population)) +
+    __________(~___________, ncol=2) +
+  scale_fill__________(_________=1, _______=&quot;Percent of Population&quot;) +
+  _____(_________=________________, _______=&quot;Source: City of Boston&quot;)</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":false,"error":false,"message":true,"exercise.df_print":"paged","exercise.timelimit":30,"exercise.checker":["function (label, user_code, check_code, envir_result, evaluate_result, ","    ...) ","{","    if (is_bad_code(user_code, check_code, envir_result)) {","        return(list(message = \"Code wasn't right!\", correct = FALSE, ","            location = \"append\"))","    }","    else {","        return(list(message = \"Great Job!\", correct = TRUE, location = \"append\"))","    }","}"]}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="plot5-check" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>ggplot(boston_race_map) +
+  geom_sf(aes(fill=Percent.of.Population)) +
+  facet_wrap(~Race.and.or.Ethnicity, ncol=2) +
+  scale_fill_distiller(direction=1, name=&quot;Percent of Population&quot;) +
+  labs(title=&quot;Boston neighborhood population by race&quot;, caption=&quot;Source: City of Boston&quot;)</code></pre>
+</div>
+</div>
+<div id="section-style-with-grid-and-axis-fixes" class="section level3">
+<h3>Style with grid and axis fixes</h3>
+<p>Also, let’s get rid of the axis marks and the background gray grid.</p>
+<p><strong>This will take a few moments to render</strong>.</p>
+<div class="tutorial-exercise" data-label="plot6" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>ggplot(boston_race_map) +
+  geom_sf(aes(fill=Percent.of.Population)) +
+  scale_fill__________(_________=1, _______=&quot;Percent of Population&quot;) +
+  _____(_________=________________, _______=&quot;Source: City of Boston&quot;) +
+  theme________() +
+  theme(_________________ = element_line(colour = ____________)) +</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":false,"error":false,"message":true,"exercise.df_print":"paged","exercise.timelimit":30,"exercise.checker":["function (label, user_code, check_code, envir_result, evaluate_result, ","    ...) ","{","    if (is_bad_code(user_code, check_code, envir_result)) {","        return(list(message = \"Code wasn't right!\", correct = FALSE, ","            location = \"append\"))","    }","    else {","        return(list(message = \"Great Job!\", correct = TRUE, location = \"append\"))","    }","}"]}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="plot6-check" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>ggplot(boston_race_map) +
+  geom_sf(aes(fill=Percent.of.Population))  +
+  scale_fill_distiller(direction=1, name=&quot;Percent of Population&quot;) + 
+  facet_wrap(~Race.and.or.Ethnicity, ncol=2) +
+  labs(title=&quot;Boston neighborhood population by race&quot;, caption=&quot;Source: City of Boston&quot;) +
+  theme_void() +
+  theme(panel.grid.major = element_line(colour = &#39;transparent&#39;))</code></pre>
+</div>
+</div>
+</div>
+<div id="section-mapping-murders" class="section level2">
+<h2>Mapping murders</h2>
+<p>This data comes from The Washington Post’s <a href="https://www.washingtonpost.com/graphics/2018/investigations/where-murders-go-unsolved/">Murder with Impunity</a> series.</p>
+<p>We’ll start out with a slice of Boston’s data.</p>
+<p>Take a glimpse at the structure of the data, which is in the environment as <strong>homicides</strong>.</p>
+<div class="tutorial-exercise" data-label="glimpse5" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>_____(homicides)</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.timelimit":30,"exercise.checker":["function (label, user_code, check_code, envir_result, evaluate_result, ","    ...) ","{","    if (is_bad_code(user_code, check_code, envir_result)) {","        return(list(message = \"Code wasn't right!\", correct = FALSE, ","            location = \"append\"))","    }","    else {","        return(list(message = \"Great Job!\", correct = TRUE, location = \"append\"))","    }","}"]}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="glimpse5-check" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>glimpse(homicides)</code></pre>
+</div>
+<div id="section-plot-the-points-on-the-map" class="section level3">
+<h3>Plot the points on the map</h3>
+<p>Let’s use the leaflet package to map out all the locations of the murders in Boston.</p>
+<p>We’ll use the <strong>boston</strong> shape file as the base. Then add the locations based on the latitude and longitude columns in the <strong>homicides</strong> data frame.</p>
+<pre><code>library(leaflet)</code></pre>
+<p>Fill in the blanks to 1) add the shapefile of Boston neighborhoods. Remember, the shapefile is in the global environment as <strong>boston</strong>. Then, 2) Add circles for every longitude and latitude in the <strong>homicides</strong> data frame and have the popup be the <em>disposition</em> variable.</p>
+<div class="tutorial-exercise" data-label="leaflet" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>leaflet(________) %&gt;% addProviderTiles(&quot;CartoDB.Positron&quot;) %&gt;% 
+  setView(-71.087010, 42.316240, zoom = 11) %&gt;% 
+    __________( 
+              fillColor = &quot;transparent&quot;, 
+              fillOpacity = 0.9, 
+              weight = 1, 
+              smoothFactor = 0.2,
+              color=&quot;black&quot;) %&gt;% 
+    add_______(~________$____, ~_________$__, popup=______$______, weight = 3, 
+               radius=40, color=&quot;#ff0000&quot;, stroke = TRUE, fillOpacity = 0.8) </code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":false,"error":false,"message":true,"exercise.df_print":"paged","exercise.timelimit":30,"exercise.checker":["function (label, user_code, check_code, envir_result, evaluate_result, ","    ...) ","{","    if (is_bad_code(user_code, check_code, envir_result)) {","        return(list(message = \"Code wasn't right!\", correct = FALSE, ","            location = \"append\"))","    }","    else {","        return(list(message = \"Great Job!\", correct = TRUE, location = \"append\"))","    }","}"]}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="leaflet-check" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>leaflet(boston) %&gt;% addProviderTiles(&quot;CartoDB.Positron&quot;) %&gt;% 
+  setView(-71.087010, 42.316240, zoom = 11) %&gt;% 
+    addPolygons( 
+              fillColor = &quot;transparent&quot;, 
+              fillOpacity = 0.9, 
+              weight = 1, 
+              smoothFactor = 0.2,
+              color=&quot;black&quot;) %&gt;% 
+    addCircles(~homicides$lon, ~homicides$lat, popup=homicides$disposition, weight = 3, radius=40, color=&quot;#ff0000&quot;, stroke = TRUE, fillOpacity = 0.8) </code></pre>
+</div>
+</div>
+<div id="section-points-in-a-polygon-prep" class="section level3">
+<h3>Points in a polygon prep</h3>
+<p>We want to associate each dot with a corresponding neighborhood.</p>
+<p>Prepare points for join by making points fit the projection of the shapefile it will be joined with.</p>
+<div class="tutorial-exercise" data-label="projection" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>murders_spatial &lt;- homicides %&gt;% 
+  ________(coords=c(&quot;lon&quot;, &quot;lat&quot;), crs = &quot;+proj=longlat&quot;) %&gt;% 
+  __________(crs=_____(boston)) 
+
+str(murders_spatial)</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":false,"error":false,"message":true,"exercise.df_print":"paged","exercise.timelimit":30,"exercise.checker":["function (label, user_code, check_code, envir_result, evaluate_result, ","    ...) ","{","    if (is_bad_code(user_code, check_code, envir_result)) {","        return(list(message = \"Code wasn't right!\", correct = FALSE, ","            location = \"append\"))","    }","    else {","        return(list(message = \"Great Job!\", correct = TRUE, location = \"append\"))","    }","}"]}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="projection-check" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>murders_spatial &lt;- homicides %&gt;% 
+  st_as_sf(coords=c(&quot;lon&quot;, &quot;lat&quot;), crs = &quot;+proj=longlat&quot;) %&gt;% 
+  st_transform(crs=st_crs(boston))
+
+str(murders_spatial)</code></pre>
+</div>
+<div id="section-pointsin-hint">
+<p>You’ll be using three different st_xxxxx functions. If you need reference, we’ve <a href="http://learn.r-journalism.com/en/mapping/case_study/traffic-stops/">used it before</a>.</p>
+</div>
+</div>
+<div id="section-points-in-a-polygon-join" class="section level3">
+<h3>Points in a polygon join</h3>
+<p>Use the special function that sees where the geometries we’ve set in <strong>murders_spatial</strong> fall into which polygon in <strong>boston</strong>.</p>
+<div class="tutorial-exercise" data-label="pointsin" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>points_in &lt;- __________(boston, _________, left=T)
+
+points_in</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":false,"error":false,"message":true,"exercise.df_print":"paged","exercise.timelimit":30,"exercise.checker":["function (label, user_code, check_code, envir_result, evaluate_result, ","    ...) ","{","    if (is_bad_code(user_code, check_code, envir_result)) {","        return(list(message = \"Code wasn't right!\", correct = FALSE, ","            location = \"append\"))","    }","    else {","        return(list(message = \"Great Job!\", correct = TRUE, location = \"append\"))","    }","}"]}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="pointsin-check" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>points_in &lt;- st_join(boston, murders_spatial, left=T)
+
+points_in</code></pre>
+</div>
+<p>We’ll bring in the viridis library for colors.</p>
+<pre><code>library(viridis)</code></pre>
+<p>And now we can make a choropleth map with this new transformed data frame.</p>
+<p>Start with the <strong>points_in</strong> data frame and figure out the number of murders per neighborhood (<strong>Name</strong> is the variable name). You’ll need to create a new variable called <em>murders</em>.</p>
+<div class="tutorial-exercise" data-label="choro1" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>points_in %&gt;% 
+  group_by(_____) %&gt;%
+  __________(_________=___) %&gt;% 
+________() +
+  ________(aes(fill = ________), color=NA) +
+  coord_sf(datum=NA) +
+  labs(title = &quot;Total murders in Boston by neighborhood&quot;,
+       subtitle = &quot;Between 2008 and 2018&quot;,
+       caption = &quot;Source: Washington Post&quot;,
+       fill = &quot;Murders&quot;) +
+  scale_fill_viridis(option=&quot;magma&quot;, direction=-1)</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":false,"error":false,"message":true,"exercise.df_print":"paged","exercise.timelimit":30,"exercise.checker":["function (label, user_code, check_code, envir_result, evaluate_result, ","    ...) ","{","    if (is_bad_code(user_code, check_code, envir_result)) {","        return(list(message = \"Code wasn't right!\", correct = FALSE, ","            location = \"append\"))","    }","    else {","        return(list(message = \"Great Job!\", correct = TRUE, location = \"append\"))","    }","}"]}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="choro1-check" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>points_in %&gt;% 
+  group_by(Name) %&gt;%
+  summarize(murders=n()) %&gt;% 
+ggplot() +
+  geom_sf(aes(fill = murders), color=NA) +
+  coord_sf(datum=NA) +
+  labs(title = &quot;Total murders in Boston by neighborhood&quot;,
+       subtitle = &quot;Between 2008 and 2018&quot;,
+       caption = &quot;Source: Washington Post&quot;,
+       fill = &quot;Murders&quot;) +
+  scale_fill_viridis(option=&quot;magma&quot;, direction=-1)</code></pre>
+</div>
+<p>Nice!</p>
+<p>Now, let’s figure out percent of unsolved murders by neighborhood and map that out.</p>
+<p>You’ll have to add another variable (<em>disposition</em>) to group by and after summarizing by creating a new variable (<em>murders</em>), you’ll then create another variable <em>percent</em> that figures out the percent.</p>
+<p>And then filter disposition for <code>&quot;Open/No arrest&quot;</code>.</p>
+<p>Then plot it with the function from ggplot2().</p>
+<div class="tutorial-exercise" data-label="choro2" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>points_in %&gt;% 
+  ______(____, ________) %&gt;%
+  ________(________=___) %&gt;% 
+  ________(______=______/___(_________)*100) %&gt;% 
+  filter(____________==&quot;Open/No arrest&quot;) %&gt;% 
+ggplot() +
+  _______(aes(fill = _______), color=NA) +
+  coord_sf(datum=NA) +
+  labs(title = &quot;Rate of unsolved murders in Boston by neighborhood&quot;,
+       subtitle = &quot;Between 2008 and 2018&quot;,
+       caption = &quot;Source: Washington Post&quot;,
+       fill = &quot;Percent unsolved&quot;) +
+  scale_fill_viridis(option=&quot;magma&quot;, direction=-1)</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":false,"error":false,"message":true,"exercise.df_print":"paged","exercise.timelimit":30,"exercise.checker":["function (label, user_code, check_code, envir_result, evaluate_result, ","    ...) ","{","    if (is_bad_code(user_code, check_code, envir_result)) {","        return(list(message = \"Code wasn't right!\", correct = FALSE, ","            location = \"append\"))","    }","    else {","        return(list(message = \"Great Job!\", correct = TRUE, location = \"append\"))","    }","}"]}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="choro2-check" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>points_in %&gt;% 
+  group_by(Name, disposition) %&gt;%
+  summarize(murders=n()) %&gt;% 
+  mutate(percent=murders/sum(murders)*100) %&gt;% 
+  filter(disposition==&quot;Open/No arrest&quot;) %&gt;% 
+ggplot() +
+  geom_sf(aes(fill = percent), color=NA) +
+  coord_sf(datum=NA) +
+  labs(title = &quot;Rate of unsolved murders in Boston by neighborhood&quot;,
+       subtitle = &quot;Between 2008 and 2018&quot;,
+       caption = &quot;Source: Washington Post&quot;,
+       fill = &quot;Percent unsolved&quot;) +
+  scale_fill_viridis(option=&quot;magma&quot;, direction=-1)</code></pre>
+</div>
+<div id="section-choro2-hint">
+<p>Remember, to find the percent of something, it’s <code>something/sum(something)*100</code>.</p>
+</div>
+<p>Let’s see if we can do the analysis above but for each ethnicity listed in Boston.</p>
+<p>Quickly take a look at the <strong>points_in</strong> data frame to look up what variable you want to add.</p>
+<pre><code>## Observations: 616
+## Variables: 18
+## $ OBJECTID      &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+## $ Name          &lt;fct&gt; Roslindale, Roslindale, Roslindale, Roslindale, ...
+## $ Acres         &lt;dbl&gt; 1605.568, 1605.568, 1605.568, 1605.568, 1605.568...
+## $ Neighborho    &lt;fct&gt; 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, ...
+## $ SqMiles       &lt;dbl&gt; 2.51, 2.51, 2.51, 2.51, 2.51, 2.51, 2.51, 2.51, ...
+## $ ShapeSTAre    &lt;dbl&gt; 69938273, 69938273, 69938273, 69938273, 69938273...
+## $ ShapeSTLen    &lt;dbl&gt; 53563.91, 53563.91, 53563.91, 53563.91, 53563.91...
+## $ uid           &lt;chr&gt; &quot;Bos-000067&quot;, &quot;Bos-000091&quot;, &quot;Bos-000145&quot;, &quot;Bos-0...
+## $ reported_date &lt;int&gt; 20150720, 20140109, 20130129, 20130914, 20110605...
+## $ victim_last   &lt;chr&gt; &quot;CASTILLO&quot;, &quot;JOHN&quot;, &quot;JONES&quot;, &quot;CASTILLO&quot;, &quot;MARTIN...
+## $ victim_first  &lt;chr&gt; &quot;JASON&quot;, &quot;BRANDON&quot;, &quot;CARLY&quot;, &quot;NELSON B. JR.&quot;, &quot;W...
+## $ victim_race   &lt;chr&gt; &quot;Hispanic&quot;, &quot;Black&quot;, &quot;Black&quot;, &quot;Hispanic&quot;, &quot;Hispa...
+## $ victim_age    &lt;chr&gt; &quot;28&quot;, &quot;18&quot;, &quot;32&quot;, &quot;25&quot;, &quot;23&quot;, &quot;43&quot;, &quot;17&quot;, &quot;22&quot;, ...
+## $ victim_sex    &lt;chr&gt; &quot;Male&quot;, &quot;Male&quot;, &quot;Female&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Femal...
+## $ city          &lt;chr&gt; &quot;Boston&quot;, &quot;Boston&quot;, &quot;Boston&quot;, &quot;Boston&quot;, &quot;Boston&quot;...
+## $ state         &lt;chr&gt; &quot;MA&quot;, &quot;MA&quot;, &quot;MA&quot;, &quot;MA&quot;, &quot;MA&quot;, &quot;MA&quot;, &quot;MA&quot;, &quot;MA&quot;, ...
+## $ disposition   &lt;chr&gt; &quot;Open/No arrest&quot;, &quot;Open/No arrest&quot;, &quot;Open/No arr...
+## $ geometry      &lt;MULTIPOLYGON [°]&gt; MULTIPOLYGON (((-71.12593 4..., MUL...</code></pre>
+<p>Now add that variable into the group_by and make a small multiples viz of the map based on that new variable.</p>
+<div class="tutorial-exercise" data-label="choro3" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>points_in %&gt;% 
+  group_by(Name, __________, disposition) %&gt;%
+  summarize(murders=n()) %&gt;% 
+  mutate(percent=murders/sum(murders)*100) %&gt;% 
+  filter(disposition==&quot;Open/No arrest&quot;) %&gt;% 
+ggplot() +
+  geom_sf(aes(fill = percent), color=NA) +
+  coord_sf(datum=NA) +
+  labs(title = &quot;Rate of solved murders in Boston by neighborhood&quot;,
+       subtitle = &quot;Between 2008 and 2018&quot;,
+       caption = &quot;Source: Washington Post&quot;,
+       fill = &quot;Percent unsolved&quot;) +
+  scale_fill_viridis(option=&quot;magma&quot;, direction=-1) +
+  __________(~_________)</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":false,"error":false,"message":true,"exercise.df_print":"paged","exercise.timelimit":30,"exercise.checker":["function (label, user_code, check_code, envir_result, evaluate_result, ","    ...) ","{","    if (is_bad_code(user_code, check_code, envir_result)) {","        return(list(message = \"Code wasn't right!\", correct = FALSE, ","            location = \"append\"))","    }","    else {","        return(list(message = \"Great Job!\", correct = TRUE, location = \"append\"))","    }","}"]}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="choro3-check" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>points_in %&gt;% 
+  group_by(Name, victim_race, disposition) %&gt;%
+  summarize(murders=n()) %&gt;% 
+  mutate(percent=murders/sum(murders)*100) %&gt;% 
+  filter(disposition==&quot;Open/No arrest&quot;) %&gt;% 
+ggplot() +
+  geom_sf(aes(fill = percent), color=NA) +
+  coord_sf(datum=NA) +
+  labs(title = &quot;Rate of unsolved murders in Boston by neighborhood&quot;,
+       subtitle = &quot;Between 2008 and 2018&quot;,
+       caption = &quot;Source: Washington Post&quot;,
+       fill = &quot;Percent unsolved&quot;) +
+  scale_fill_viridis(option=&quot;magma&quot;, direction=-1) +
+  facet_wrap(~victim_race)</code></pre>
+</div>
+<p>That’s a slick-looking graphic.</p>
+<p>These are the results as a data frame if you didn’t map it:</p>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Name"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["victim_race"],"name":[2],"type":["chr"],"align":["left"]},{"label":["disposition"],"name":[3],"type":["chr"],"align":["left"]},{"label":["murders"],"name":[4],"type":["int"],"align":["right"]},{"label":["percent"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["geometry"],"name":[6],"type":["S3: sfc_GEOMETRY"],"align":["right"]}],"data":[{"1":"Allston","2":"Black","3":"Open/No arrest","4":"1","5":"50.000000","6":"<S3: sfc_GEOMETRY>"},{"1":"Allston","2":"Other","3":"Open/No arrest","4":"1","5":"100.000000","6":"<S3: sfc_GEOMETRY>"},{"1":"Back Bay","2":"Black","3":"Open/No arrest","4":"2","5":"66.666667","6":"<S3: sfc_GEOMETRY>"},{"1":"Brighton","2":"Black","3":"Open/No arrest","4":"1","5":"50.000000","6":"<S3: sfc_GEOMETRY>"},{"1":"Charlestown","2":"Black","3":"Open/No arrest","4":"1","5":"25.000000","6":"<S3: sfc_GEOMETRY>"},{"1":"Charlestown","2":"Hispanic","3":"Open/No arrest","4":"1","5":"100.000000","6":"<S3: sfc_GEOMETRY>"},{"1":"Dorchester","2":"Asian","3":"Open/No arrest","4":"1","5":"50.000000","6":"<S3: sfc_GEOMETRY>"},{"1":"Dorchester","2":"Black","3":"Open/No arrest","4":"126","5":"64.285714","6":"<S3: sfc_GEOMETRY>"},{"1":"Dorchester","2":"Hispanic","3":"Open/No arrest","4":"10","5":"38.461538","6":"<S3: sfc_GEOMETRY>"},{"1":"Dorchester","2":"Unknown","3":"Open/No arrest","4":"1","5":"100.000000","6":"<S3: sfc_GEOMETRY>"},{"1":"Dorchester","2":"White","3":"Open/No arrest","4":"1","5":"8.333333","6":"<S3: sfc_GEOMETRY>"},{"1":"Downtown","2":"Black","3":"Open/No arrest","4":"4","5":"36.363636","6":"<S3: sfc_GEOMETRY>"},{"1":"East Boston","2":"Hispanic","3":"Open/No arrest","4":"4","5":"36.363636","6":"<S3: sfc_GEOMETRY>"},{"1":"East Boston","2":"White","3":"Open/No arrest","4":"2","5":"40.000000","6":"<S3: sfc_GEOMETRY>"},{"1":"Fenway","2":"Black","3":"Open/No arrest","4":"1","5":"100.000000","6":"<S3: sfc_GEOMETRY>"},{"1":"Fenway","2":"White","3":"Open/No arrest","4":"1","5":"33.333333","6":"<S3: sfc_GEOMETRY>"},{"1":"Hyde Park","2":"Black","3":"Open/No arrest","4":"10","5":"71.428571","6":"<S3: sfc_GEOMETRY>"},{"1":"Jamaica Plain","2":"Black","3":"Open/No arrest","4":"5","5":"35.714286","6":"<S3: sfc_GEOMETRY>"},{"1":"Jamaica Plain","2":"Hispanic","3":"Open/No arrest","4":"4","5":"33.333333","6":"<S3: sfc_GEOMETRY>"},{"1":"Mattapan","2":"Black","3":"Open/No arrest","4":"28","5":"62.222222","6":"<S3: sfc_GEOMETRY>"},{"1":"Mattapan","2":"Hispanic","3":"Open/No arrest","4":"4","5":"50.000000","6":"<S3: sfc_GEOMETRY>"},{"1":"Mission Hill","2":"Black","3":"Open/No arrest","4":"2","5":"22.222222","6":"<S3: sfc_GEOMETRY>"},{"1":"Mission Hill","2":"Hispanic","3":"Open/No arrest","4":"3","5":"60.000000","6":"<S3: sfc_GEOMETRY>"},{"1":"Roslindale","2":"Black","3":"Open/No arrest","4":"8","5":"100.000000","6":"<S3: sfc_GEOMETRY>"},{"1":"Roslindale","2":"Hispanic","3":"Open/No arrest","4":"6","5":"54.545455","6":"<S3: sfc_GEOMETRY>"},{"1":"Roxbury","2":"Black","3":"Open/No arrest","4":"58","5":"55.769231","6":"<S3: sfc_GEOMETRY>"},{"1":"Roxbury","2":"Hispanic","3":"Open/No arrest","4":"9","5":"56.250000","6":"<S3: sfc_GEOMETRY>"},{"1":"Roxbury","2":"White","3":"Open/No arrest","4":"1","5":"20.000000","6":"<S3: sfc_GEOMETRY>"},{"1":"South Boston","2":"Black","3":"Open/No arrest","4":"2","5":"50.000000","6":"<S3: sfc_GEOMETRY>"},{"1":"South Boston","2":"Hispanic","3":"Open/No arrest","4":"2","5":"40.000000","6":"<S3: sfc_GEOMETRY>"},{"1":"South Boston Waterfront","2":"Black","3":"Open/No arrest","4":"2","5":"100.000000","6":"<S3: sfc_GEOMETRY>"},{"1":"South End","2":"Black","3":"Open/No arrest","4":"1","5":"20.000000","6":"<S3: sfc_GEOMETRY>"},{"1":"South End","2":"Hispanic","3":"Open/No arrest","4":"4","5":"80.000000","6":"<S3: sfc_GEOMETRY>"},{"1":"South End","2":"White","3":"Open/No arrest","4":"1","5":"50.000000","6":"<S3: sfc_GEOMETRY>"},{"1":"West End","2":"Black","3":"Open/No arrest","4":"1","5":"100.000000","6":"<S3: sfc_GEOMETRY>"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="section-add-it-to-an-interactive-map" class="section level3">
+<h3>Add it to an interactive map</h3>
+<p>One last map.</p>
+<p>Let’s figure out where unsolved murders occurr in context of Black-majority population neighborhoods.</p>
+<p>I’ve already loaded the Census tracts with the percent of Black population as the data frame <strong>boston_black_perc</strong>.</p>
+<p>Here’s how the polygons look:</p>
+<p><img src="index_files/figure-html/tracts-1.png" width="624" /></p>
+<p>And here’s how the data frame looks:</p>
+<pre><code>## Observations: 204
+## Variables: 6
+## $ GEOID           &lt;chr&gt; &quot;25025000100&quot;, &quot;25025000201&quot;, &quot;25025000202&quot;, &quot;...
+## $ NAME            &lt;chr&gt; &quot;Census Tract 1, Suffolk County, Massachusetts...
+## $ Black           &lt;dbl&gt; 252, 170, 320, 101, 142, 209, 77, 102, 32, 190...
+## $ Total           &lt;dbl&gt; 4185, 3553, 3697, 2590, 3110, 5127, 3277, 5904...
+## $ black_residents &lt;dbl&gt; 6.02, 4.78, 8.66, 3.90, 4.57, 4.08, 2.35, 1.73...
+## $ geometry        &lt;MULTIPOLYGON [°]&gt; MULTIPOLYGON (((-71.1609 42..., M...</code></pre>
+<p>First, let’s create a new data frame that breaks out census tracts where the Black population is the majority.</p>
+<div class="tutorial-exercise" data-label="breakout" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>black_boston &lt;- boston_black_perc %&gt;% 
+  filter(__________ &gt; 50)
+
+black_boston</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":false,"error":false,"message":true,"exercise.df_print":"paged","exercise.timelimit":30,"exercise.checker":["function (label, user_code, check_code, envir_result, evaluate_result, ","    ...) ","{","    if (is_bad_code(user_code, check_code, envir_result)) {","        return(list(message = \"Code wasn't right!\", correct = FALSE, ","            location = \"append\"))","    }","    else {","        return(list(message = \"Great Job!\", correct = TRUE, location = \"append\"))","    }","}"]}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="breakout-check" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>black_boston &lt;- boston_black_perc %&gt;% 
+  filter(black_percent &gt; 50)
+
+black_boston</code></pre>
+</div>
+</div>
+<div id="section-final-map" class="section level3">
+<h3>Final map</h3>
+<p>Alright, I’ve set up some colors based on “Closed by arrest” and “Open/No arrest”.</p>
+<pre><code>disp &lt;- colorFactor(c(&quot;#ff0000&quot;, &quot;#13ED3F&quot;), domain=c(&quot;Closed by arrest&quot;, &quot;Open/No arrest&quot;))</code></pre>
+<p>We’re going to create a layered interactive map.</p>
+<p>First layer is all the Boston census tracts with a minimal border (<strong>boston_black_perc</strong>).</p>
+<p>Second layer is the Black only census tracts with a thicker border (<strong>black_boston</strong>).</p>
+<p>The third and final layer are circles representing solved and unsolved murders (the colors are based on the code above).</p>
+<p>Then, add a legend.</p>
+<div class="tutorial-exercise" data-label="leaflet2" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>leaflet() %&gt;% addProviderTiles(&quot;CartoDB.Positron&quot;) %&gt;% 
+  setView(-71.087010, 42.316240, zoom = 11) %&gt;% 
+    add_______(data=________,
+              fillColor = &quot;transparent&quot;, 
+              fillOpacity = 0.9, 
+              weight = 1, 
+              smoothFactor = 0.2,
+              color=&quot;black&quot;) %&gt;% 
+    add_______(data=________, 
+              fillColor = &quot;transparent&quot;, 
+              fillOpacity = 1, 
+              weight = 3, 
+              smoothFactor = 0.2,
+              color=&quot;black&quot;) %&gt;% 
+    add_______(data=homicides, ~homicides$lon, ~homicides$lat, popup=homicides$_________,
+               weight = 3, radius=40, color=~______(disposition), stroke = TRUE,
+               fillOpacity = 0.8) %&gt;% 
+    add_______(&quot;bottomright&quot;, colors= c(&quot;#ff0000&quot;, &quot;#13ED3F&quot;), 
+              labels=c(&quot;Arrest made/Closed&quot;, &quot;Open&quot;), title=&quot;Disposition&quot;) </code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":false,"error":false,"message":true,"exercise.df_print":"paged","exercise.timelimit":30,"exercise.checker":["function (label, user_code, check_code, envir_result, evaluate_result, ","    ...) ","{","    if (is_bad_code(user_code, check_code, envir_result)) {","        return(list(message = \"Code wasn't right!\", correct = FALSE, ","            location = \"append\"))","    }","    else {","        return(list(message = \"Great Job!\", correct = TRUE, location = \"append\"))","    }","}"]}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="leaflet2-check" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>leaflet() %&gt;% addProviderTiles(&quot;CartoDB.Positron&quot;) %&gt;% 
+  setView(-71.087010, 42.316240, zoom = 11) %&gt;% 
+    addPolygons(data=boston_black_perc,
+              fillColor = &quot;transparent&quot;, 
+              fillOpacity = 0.9, 
+              weight = 1, 
+              smoothFactor = 0.2,
+              color=&quot;black&quot;) %&gt;% 
+    addPolygons(data=black_boston, 
+              fillColor = &quot;transparent&quot;, 
+              fillOpacity = 1, 
+              weight = 3, 
+              smoothFactor = 0.2,
+              color=&quot;black&quot;) %&gt;% 
+    addCircles(data=homicides, ~homicides$lon, ~homicides$lat, popup=homicides$disposition, weight = 3, radius=40, color=~disp(disposition), stroke = TRUE, fillOpacity = 0.8) %&gt;% 
+    addLegend(&quot;bottomright&quot;, colors= c(&quot;#ff0000&quot;, &quot;#13ED3F&quot;), labels=c(&quot;Arrest made/Closed&quot;, &quot;Open&quot;), title=&quot;Disposition&quot;) </code></pre>
+</div>
+<p>Congratulations!</p>
+<p>You’re done with this chapter!</p>
+
+<script type="application/shiny-prerendered" data-context="server-start">
+library(learnr)
+library(tidyverse)
+library(sf)
+library(leaflet)
+library(viridis)
+
+knitr::opts_chunk$set(echo = FALSE)
+
+map_filepath <- "Boston_Neighborhoods/Boston_Neighborhoods.shp"
+
+boston <- st_read(map_filepath)
+
+homicides <- read_csv("homicide-data.csv")
+homicides <- homicides %>% 
+  filter(city=="Boston") %>% 
+  filter(!is.na(lon))
+
+race_ethnicity <- read_csv("race-and-or-ethnicity.csv")
+colnames(race_ethnicity) <- make.names(colnames(race_ethnicity))
+race_ethnicity$Percent.of.Population <- as.numeric(gsub("\\%", "", race_ethnicity$Percent.of.Population))
+race_ethnicity2010 <- filter(race_ethnicity, Decade==2010)
+
+boston_population <- race_ethnicity2010 %>% group_by(Neighborhood) %>% 
+  summarize(Population=sum(Number.of.People))
+
+boston_race_map <- left_join(race_ethnicity2010, boston, by=c("Neighborhood"="Name"))
+
+boston_pop_map <- left_join(boston_population, boston, by=c("Neighborhood"="Name"))
+
+
+boston_black_perc <- readRDS("boston_black.rds")
+
+black_boston <- boston_black_perc %>% 
+  rename(black_percent=black_residents) %>% 
+  filter(black_percent > 50)
+
+murders_spatial <- homicides %>% 
+  st_as_sf(coords=c("lon", "lat"), crs = "+proj=longlat") %>% 
+  st_transform(crs=st_crs(boston))
+
+points_in <- st_join(boston, murders_spatial, left=T)
+
+disp <- colorFactor(c("#ff0000", "#13ED3F"), domain=c("Closed by arrest", "Open/No arrest"))
+
+nospace <- function(a) {
+  a <- gsub(" ","",a) 
+  a <- gsub("\\\n", "", a)
+  gsub("\\`", "", a)
+}
+
+
+is_bad_code <- function(user_code, check_code, envir_result) {
+
+  is_null <- is.null(eval(parse(text = user_code)))
+  is_gg <- any(grepl("gg", class(eval(parse(text = user_code)))))
+  e_class <- class(eval(parse(text = user_code)))[1]
+  r_class <- class((eval(parse(text = check_code), envir = envir_result)))[1]
+  e_rows <- nrow(eval(parse(text = user_code)))
+  r_rows <- nrow(eval(parse(text = check_code), envir = envir_result))
+  e_cols <- ncol(eval(parse(text = user_code)))
+  r_cols <- ncol(eval(parse(text = check_code), envir = envir_result))
+  e_type <- typeof(eval(parse(text = user_code)))
+  r_type <- typeof(eval(parse(text = check_code), envir=envir_result))
+  e_len <- length(eval(parse(text = user_code)))
+  r_len <- length(eval(parse(text = check_code)))
+  if (is_null!=T & is_gg!=T & r_class!="sf" & r_class!="tbl_df" & r_class!="leaflet"){
+    if (e_len!=0 & r_len!=0) {
+      if (e_type==r_type) {
+        if (e_type!="character" & e_type!="double" & e_type!="integer" & e_type!="logical") {
+          if (e_rows==r_rows && e_cols==r_cols) {
+            eval(parse(text = user_code)) != eval(parse(text = check_code), envir = envir_result)
+          } else {
+            TRUE
+          }
+        } else { eval(parse(text = user_code)) != eval(parse(text = check_code), envir = envir_result) }
+      } else {
+        TRUE
+      }
+    } else { TRUE }
+  } else {nospace(user_code) != nospace(check_code)}
+}
+
+
+checker <- function(label, user_code, check_code, envir_result, evaluate_result, ...) {
+  if (is_bad_code(user_code, check_code, envir_result)) {
+    return(list(message = "Code wasn't right!", correct = FALSE, location = "append"))
+  } else {
+    return(list(message = "Great Job!", correct = TRUE, location = "append"))
+  }
+}  
+
+tutorial_options(exercise.timelimit = 30, exercise.checker = checker)
+
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::register_http_handlers(session, metadata = list(id = "code.r-journalism/chapter-5", version = 0.8))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-glimpse-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-glimpse-code-editor`)), session)
+output$`tutorial-exercise-glimpse-output` <- renderUI({
+  `tutorial-exercise-glimpse-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-plot-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-plot-code-editor`)), session)
+output$`tutorial-exercise-plot-output` <- renderUI({
+  `tutorial-exercise-plot-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-glimpse2-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-glimpse2-code-editor`)), session)
+output$`tutorial-exercise-glimpse2-output` <- renderUI({
+  `tutorial-exercise-glimpse2-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-join-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-join-code-editor`)), session)
+output$`tutorial-exercise-join-output` <- renderUI({
+  `tutorial-exercise-join-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-plot2-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-plot2-code-editor`)), session)
+output$`tutorial-exercise-plot2-output` <- renderUI({
+  `tutorial-exercise-plot2-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-plot3-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-plot3-code-editor`)), session)
+output$`tutorial-exercise-plot3-output` <- renderUI({
+  `tutorial-exercise-plot3-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-plot3a-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-plot3a-code-editor`)), session)
+output$`tutorial-exercise-plot3a-output` <- renderUI({
+  `tutorial-exercise-plot3a-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-glimpse4-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-glimpse4-code-editor`)), session)
+output$`tutorial-exercise-glimpse4-output` <- renderUI({
+  `tutorial-exercise-glimpse4-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-join2-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-join2-code-editor`)), session)
+output$`tutorial-exercise-join2-output` <- renderUI({
+  `tutorial-exercise-join2-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-plot4-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-plot4-code-editor`)), session)
+output$`tutorial-exercise-plot4-output` <- renderUI({
+  `tutorial-exercise-plot4-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-plot5-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-plot5-code-editor`)), session)
+output$`tutorial-exercise-plot5-output` <- renderUI({
+  `tutorial-exercise-plot5-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-plot6-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-plot6-code-editor`)), session)
+output$`tutorial-exercise-plot6-output` <- renderUI({
+  `tutorial-exercise-plot6-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-glimpse5-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-glimpse5-code-editor`)), session)
+output$`tutorial-exercise-glimpse5-output` <- renderUI({
+  `tutorial-exercise-glimpse5-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-leaflet-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-leaflet-code-editor`)), session)
+output$`tutorial-exercise-leaflet-output` <- renderUI({
+  `tutorial-exercise-leaflet-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-projection-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-projection-code-editor`)), session)
+output$`tutorial-exercise-projection-output` <- renderUI({
+  `tutorial-exercise-projection-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-pointsin-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-pointsin-code-editor`)), session)
+output$`tutorial-exercise-pointsin-output` <- renderUI({
+  `tutorial-exercise-pointsin-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-choro1-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-choro1-code-editor`)), session)
+output$`tutorial-exercise-choro1-output` <- renderUI({
+  `tutorial-exercise-choro1-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-choro2-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-choro2-code-editor`)), session)
+output$`tutorial-exercise-choro2-output` <- renderUI({
+  `tutorial-exercise-choro2-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-choro3-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-choro3-code-editor`)), session)
+output$`tutorial-exercise-choro3-output` <- renderUI({
+  `tutorial-exercise-choro3-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-breakout-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-breakout-code-editor`)), session)
+output$`tutorial-exercise-breakout-output` <- renderUI({
+  `tutorial-exercise-breakout-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-leaflet2-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-leaflet2-code-editor`)), session)
+output$`tutorial-exercise-leaflet2-output` <- renderUI({
+  `tutorial-exercise-leaflet2-result`()
+})
+</script>
+ <!--html_preserve-->
+<script type="application/shiny-prerendered" data-context="dependencies">
+{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootstrap"]},{"type":"character","attributes":{},"value":["3.3.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/bootstrap-3.3.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["viewport"]}},"value":[{"type":"character","attributes":{},"value":["width=device-width, initial-scale=1"]}]},{"type":"character","attributes":{},"value":["js/bootstrap.min.js","shim/html5shiv.min.js","shim/respond.min.js"]},{"type":"character","attributes":{},"value":["css/lumen.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["pagedtable"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/pagedtable-1.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/pagedtable.js"]},{"type":"character","attributes":{},"value":["css/pagedtable.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["highlightjs"]},{"type":"character","attributes":{},"value":["9.12.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/highlightjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["highlight.js"]},{"type":"character","attributes":{},"value":["textmate.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-format"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmarkdown/templates/tutorial/resources"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-format.js"]},{"type":"character","attributes":{},"value":["tutorial-format.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["font-awesome"]},{"type":"character","attributes":{},"value":["5.0.13"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/fontawesome"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/fontawesome-all.min.js","js/fa-v4-shims.min.js"]},{"type":"character","attributes":{},"value":["css/fa-svg-with-js.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootbox"]},{"type":"character","attributes":{},"value":["4.4.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/bootbox"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["bootbox.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["localforage"]},{"type":"character","attributes":{},"value":["1.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/localforage"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["localforage.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]}]}
+</script>
+<!--/html_preserve-->
+</div>
+</div>
+
+</div> <!-- topics -->
+
+<div class="topicsContainer">
+<div class="topicsPositioner">
+<div class="band">
+<div class="bandContent topicsListContainer">
+
+<!-- begin doc-metadata -->
+<div id="doc-metadata">
+<h2 class="title toc-ignore" style="display:none;">Chapter 5</h2>
+</div>
+<!-- end doc-metadata -->
+
+</div> <!-- bandContent.topicsListContainer -->
+</div> <!-- band -->
+</div> <!-- topicsPositioner -->
+</div> <!-- topicsContainer -->
+
+
+</div> <!-- bandContent page -->
+</div> <!-- pageContent band -->
+
+
+
+
+<script>
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+
+</html>

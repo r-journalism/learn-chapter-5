@@ -83,6 +83,7 @@ install.packages("rmarkdown")
 install.packages("tidyverse")
 install.packages("sf")
 install.packages("leaflet")
+install.packages("viridis")
 ```
 
 and then

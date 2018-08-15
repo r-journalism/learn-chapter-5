@@ -139,7 +139,7 @@ View(populations)
 
 ![](images/view2.png)
 
-###. Join data to blank shapefile and map
+### Join data to blank shapefile and map
 
 We have a shapefile and a data set of populations. They're both data frames so should be easy to join. State names are where the data sets can join on. The column names for each data frame is different for state names, but we can account for that easily.
 
